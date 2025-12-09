@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Cliente - Book-O-Rama</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Contenedor con el formulario de filtros para clientes -->
+    <div class="container">
+        <h1>🔍 Buscar Cliente</h1>
+        
+        <!-- Formulario que envía la búsqueda a search_customer_results.php -->
+        <form action="search_customer_results.php" method="post">
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+                
+                <!-- Selector individual para definir si se busca por ID, nombre o ciudad -->
+                <div class="form-group">
+                    <label for="searchtype">Buscar por:</label>
+                    <select id="searchtype" name="searchtype" required>
+                        <option value="">-- Seleccione --</option>
+                        <option value="CustomerID">ID del Cliente</option>
+                        <option value="Name">Nombre</option>
+                        <option value="City">Ciudad</option>
+                    </select>
+                </div>
+
+                <!-- Campo individual para escribir el término que se comparará -->
+                <div class="form-group">
+                    <label for="searchterm">Término:</label>
+                    <input type="text" id="searchterm" name="searchterm" required
+                           placeholder="Ingrese el texto a buscar">
+                </div>
+
+                <!-- Mensaje que explica cómo se comportan las coincidencias parciales -->
+                <div class="message info">
+                    <strong>💡 Sugerencia:</strong> La búsqueda encontrará coincidencias parciales. 
+                    Por ejemplo, buscar "Juan" en Nombre encontrará "Juan Pérez" o "María Juan".
+                </div>
+            </fieldset>
+
+            <!-- Botón que ejecuta la búsqueda -->
+            <input type="submit" value="🔍 Buscar">
+        </form>
+
+        <!-- Enlace para volver al menú principal -->
+        <a href="../index.php" class="back-link">⬅️ Volver al inicio</a>
+    </div>
+</body>
+</html>

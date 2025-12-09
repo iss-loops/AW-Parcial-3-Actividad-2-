@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Cliente - Book-O-Rama</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Contenedor que agrupa la captura del cliente -->
+    <div class="container">
+        <h1>👤 Agregar Nuevo Cliente</h1>
+        
+        <!-- Formulario que envía los datos a insert_customer.php -->
+        <form action="insert_customer.php" method="post">
+            <fieldset>
+                <legend>Información del Cliente</legend>
+                
+                <!-- Campo individual para el nombre completo del cliente -->
+                <div class="form-group">
+                    <label for="Name">Nombre:</label>
+                    <input type="text" id="Name" name="Name" maxlength="100" required
+                           placeholder="Ej: Juan Pérez">
+                </div>
+
+                <!-- Campo individual para la dirección principal -->
+                <div class="form-group">
+                    <label for="Address">Dirección:</label>
+                    <input type="text" id="Address" name="Address" maxlength="200" required
+                           placeholder="Ej: Av. Principal #123">
+                </div>
+
+                <!-- Campo individual para la ciudad de residencia -->
+                <div class="form-group">
+                    <label for="City">Ciudad:</label>
+                    <input type="text" id="City" name="City" maxlength="100" required
+                           placeholder="Ej: Ciudad de México">
+                </div>
+            </fieldset>
+
+            <!-- Botón que guarda al nuevo cliente -->
+            <input type="submit" value="💾 Guardar Cliente">
+        </form>
+
+        <!-- Enlace de retorno al tablero principal -->
+        <a href="../index.php" class="back-link">⬅️ Volver al inicio</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Libro - Book-O-Rama</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Contenedor que agrupa el formulario completo -->
+    <div class="container">
+        <!-- Encabezado que indica la acción de alta -->
+        <h1>📖 Agregar Nuevo Libro</h1>
+        
+        <!-- Formulario principal que envía los datos a insert_book.php -->
+        <form action="insert_book.php" method="post">
+            <fieldset>
+                <legend>Información del Libro</legend>
+                
+                <!-- Campo individual para capturar el identificador ISBN -->
+                <div class="form-group">
+                    <label for="ISBN">ISBN:</label>
+                    <input type="text" id="ISBN" name="ISBN" maxlength="13" required 
+                           placeholder="Ej: 9781234567890">
+                </div>
+
+                <!-- Campo individual para registrar al autor principal -->
+                <div class="form-group">
+                    <label for="Author">Autor:</label>
+                    <input type="text" id="Author" name="Author" maxlength="100" required
+                           placeholder="Ej: Gabriel García Márquez">
+                </div>
+
+                <!-- Campo individual para escribir el nombre del libro -->
+                <div class="form-group">
+                    <label for="Title">Título:</label>
+                    <input type="text" id="Title" name="Title" maxlength="200" required
+                           placeholder="Ej: Cien Años de Soledad">
+                </div>
+
+                <!-- Campo individual para definir el precio de venta -->
+                <div class="form-group">
+                    <label for="Price">Precio:</label>
+                    <input type="number" id="Price" name="Price" step="0.01" min="0" required
+                           placeholder="Ej: 299.99">
+                </div>
+            </fieldset>
+
+            <!-- Botón que envía la información capturada -->
+            <input type="submit" value="💾 Guardar Libro">
+        </form>
+
+        <!-- Enlace para regresar al tablero principal -->
+        <a href="../index.php" class="back-link">⬅️ Volver al inicio</a>
+    </div>
+</body>
+</html>

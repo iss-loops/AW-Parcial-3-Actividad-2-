@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Libro - Book-O-Rama</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Contenedor con el formulario de criterios de búsqueda -->
+    <div class="container">
+        <h1>🔍 Buscar Libro</h1>
+        
+        <!-- Formulario que envía el criterio a search_book_results.php -->
+        <form action="search_book_results.php" method="post">
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+                
+                <!-- Selector individual para definir el campo (ISBN/Autor/Título) -->
+                <div class="form-group">
+                    <label for="searchtype">Buscar por:</label>
+                    <select id="searchtype" name="searchtype" required>
+                        <option value="">-- Seleccione --</option>
+                        <option value="ISBN">ISBN</option>
+                        <option value="Author">Autor</option>
+                        <option value="Title">Título</option>
+                    </select>
+                </div>
+
+                <!-- Campo individual para escribir el texto a coincidir -->
+                <div class="form-group">
+                    <label for="searchterm">Término:</label>
+                    <input type="text" id="searchterm" name="searchterm" required
+                           placeholder="Ingrese el texto a buscar">
+                </div>
+
+                <!-- Mensaje informativo que explica cómo funciona la búsqueda parcial -->
+                <div class="message info">
+                    <strong>💡 Sugerencia:</strong> La búsqueda encontrará coincidencias parciales. 
+                    Por ejemplo, buscar "García" en Autor encontrará "Gabriel García Márquez".
+                </div>
+            </fieldset>
+
+            <!-- Botón que dispara la consulta -->
+            <input type="submit" value="🔍 Buscar">
+        </form>
+
+        <!-- Enlace para salir del formulario y volver al inicio -->
+        <a href="../index.php" class="back-link">⬅️ Volver al inicio</a>
+    </div>
+</body>
+</html>

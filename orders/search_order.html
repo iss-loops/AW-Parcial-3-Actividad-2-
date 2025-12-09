@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Orden - Book-O-Rama</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <!-- Contenedor del formulario de filtros de órdenes -->
+    <div class="container">
+        <h1>🔍 Buscar Orden</h1>
+        
+        <!-- Formulario que envía los criterios al script de resultados -->
+        <form action="search_order_results.php" method="post">
+            <fieldset>
+                <legend>Criterios de Búsqueda</legend>
+                
+                <!-- Selector individual para definir si se busca por ID de orden o de cliente -->
+                <div class="form-group">
+                    <label for="searchtype">Buscar por:</label>
+                    <select id="searchtype" name="searchtype" required>
+                        <option value="">-- Seleccione --</option>
+                        <option value="OrderID">ID de la Orden</option>
+                        <option value="CustomerID">ID del Cliente</option>
+                    </select>
+                </div>
+
+                <!-- Campo individual para ingresar el número exacto a buscar -->
+                <div class="form-group">
+                    <label for="searchterm">Término:</label>
+                    <input type="number" id="searchterm" name="searchterm" required
+                           placeholder="Ingrese el ID a buscar">
+                </div>
+
+                <!-- Mensaje que describe la utilidad de buscar por cliente -->
+                <div class="message info">
+                    <strong>💡 Sugerencia:</strong> Puede buscar por ID de orden o ID de cliente 
+                    para encontrar todas las órdenes de un cliente específico.
+                </div>
+            </fieldset>
+
+            <!-- Botón que ejecuta la búsqueda -->
+            <input type="submit" value="🔍 Buscar">
+        </form>
+
+        <!-- Enlace de retorno al tablero general -->
+        <a href="../index.php" class="back-link">⬅️ Volver al inicio</a>
+    </div>
+</body>
+</html>
