@@ -1,4 +1,4 @@
-# 📚 Book-O-Rama - Sistema CRUD Completo
+# 📚ALBA - Sistema CRUD Completo
 
 Sistema de gestión completo para libros, clientes y órdenes desarrollado en PHP y MySQL.
 
@@ -239,3 +239,4 @@ Proyecto educativo - Libre uso para fines académicos
 ---
 
 ¡Listo para usar! 🚀
+
