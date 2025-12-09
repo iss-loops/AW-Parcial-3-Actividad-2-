@@ -1,113 +1,119 @@
 <?php
 /**
- * Configuración de Base de Datos - ALBA Sistema de Gestión
- * Compatible con Digital Ocean App Platform y localhost
+ * Configuración de Base de Datos - Book-O-Rama
+ * Compatible con Digital Ocean App Platform + Managed Database
+ * Incluye soporte SSL requerido por Managed Database
  */
 
 // Detectar entorno
-$is_production = getenv('APP_ENV') === 'production';
+$is_production = (getenv('APP_ENV') === 'production') || !file_exists(__DIR__ . '/.env');
 
 if ($is_production) {
-    // PRODUCCIÓN - Digital Ocean App Platform
-    // App Platform puede usar DB_USER o DB_USERNAME, DB_NAME o DB_DATABASE
-    define('DB_HOST', getenv('DB_HOST') ?: getenv('DATABASE_HOST') ?: 'localhost');
-    define('DB_PORT', getenv('DB_PORT') ?: getenv('DATABASE_PORT') ?: '25060');
+    // PRODUCCIÓN - App Platform inyecta estas variables automáticamente
+    $db_host = getenv('DB_HOST') ?: getenv('DATABASE_HOST') ?: 'localhost';
+    $db_port = getenv('DB_PORT') ?: getenv('DATABASE_PORT') ?: '3306';
+    $db_name = getenv('DB_NAME') ?: getenv('DATABASE_NAME') ?: 'db';
+    $db_user = getenv('DB_USER') ?: getenv('DATABASE_USERNAME') ?: 'root';
+    $db_pass = getenv('DB_PASS') ?: getenv('DATABASE_PASSWORD') ?: '';
     
-    // Soporta ambos formatos de nombre de variable
-    define('DB_USER', getenv('DB_USER') ?: getenv('DB_USERNAME') ?: getenv('DATABASE_USERNAME') ?: 'root');
-    define('DB_PASS', getenv('DB_PASS') ?: getenv('DB_PASSWORD') ?: getenv('DATABASE_PASSWORD') ?: '');
-    define('DB_NAME', getenv('DB_NAME') ?: getenv('DB_DATABASE') ?: getenv('DATABASE_NAME') ?: '5AP3_israel_zacarias');
-    
-    // Log para debugging (solo en producción)
-    error_log("DB Config - Host: " . DB_HOST . ", Port: " . DB_PORT . ", User: " . DB_USER . ", Database: " . DB_NAME);
-    
-    // Desactivar display de errores en producción
-    ini_set('display_errors', 0);
-    error_reporting(E_ALL);
-    ini_set('log_errors', 1);
-    
+    // Log para debugging
+    error_log("[" . date('Y-m-d H:i:s T') . "] DB Config - Host: $db_host, Port: $db_port, User: $db_user, Database: $db_name");
 } else {
-    // DESARROLLO - localhost
-    define('DB_HOST', 'localhost');
-    define('DB_PORT', '3306');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', '5AP3_israel_zacarias');
-    
-    // Activar errores en desarrollo
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    // DESARROLLO LOCAL
+    $db_host = 'localhost';
+    $db_port = '3306';
+    $db_name = '5AM_Swemy_Garcia';
+    $db_user = 'root';
+    $db_pass = '';
 }
 
 /**
- * Función para conectar a la base de datos
- * @return mysqli Objeto de conexión MySQL
+ * Crear conexión a la base de datos
+ * Con soporte SSL para Managed Database
  */
 function getDBConnection() {
-    // Intentar conexión con puerto
-    $db = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+    global $db_host, $db_port, $db_name, $db_user, $db_pass;
     
-    // Si falla con puerto, intentar sin puerto (para compatibilidad)
-    if ($db->connect_errno && DB_PORT != 3306) {
-        $db = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    }
-    
-    // Verificar conexión
-    if ($db->connect_errno) {
-        // Log del error para debugging
-        $error_msg = "Database connection failed: " . $db->connect_error . 
-                     " (Host: " . DB_HOST . ":" . DB_PORT . 
-                     ", User: " . DB_USER . 
-                     ", DB: " . DB_NAME . ")";
-        error_log($error_msg);
+    try {
+        // Crear instancia mysqli
+        $db = mysqli_init();
         
-        if (ini_get('display_errors')) {
-            // Desarrollo: mensaje detallado
-            die("<div style='padding:20px; background:#f44336; color:white; font-family:monospace;'>
-                 <h2>❌ Error de Conexión a Base de Datos</h2>
-                 <p><strong>Error:</strong> " . htmlspecialchars($db->connect_error) . "</p>
-                 <p><strong>Host:</strong> " . htmlspecialchars(DB_HOST) . ":" . DB_PORT . "</p>
-                 <p><strong>Usuario:</strong> " . htmlspecialchars(DB_USER) . "</p>
-                 <p><strong>Base de datos:</strong> " . htmlspecialchars(DB_NAME) . "</p>
-                 <p style='margin-top:15px; padding:10px; background:rgba(0,0,0,0.3);'>
-                 <strong>Verifica:</strong><br>
-                 1. Que las variables de entorno estén configuradas correctamente<br>
-                 2. Que la base de datos '" . htmlspecialchars(DB_NAME) . "' exista<br>
-                 3. Que el usuario tenga permisos<br>
-                 4. Que database.sql haya sido importado
-                 </p>
-                 </div>");
-        } else {
-            // Producción: mensaje genérico
-            die("<div style='text-align:center; padding:50px; font-family:Arial;'>
-                 <h2 style='color:#f44336;'>⚠️ Error de Conexión</h2>
-                 <p>No se pudo conectar a la base de datos.</p>
-                 <p>Por favor, contacte al administrador del sistema.</p>
-                 <p style='margin-top:20px; font-size:12px; color:#999;'>Error ID: " . time() . "</p>
-                 </div>");
+        if (!$db) {
+            error_log("Error: mysqli_init failed");
+            return null;
         }
+        
+        // Configurar timeout más corto para debugging
+        $db->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+        
+        // Detectar si estamos en producción (Managed Database requiere SSL)
+        $is_managed_db = strpos($db_host, 'ondigitalocean.com') !== false;
+        
+        if ($is_managed_db) {
+            // Configurar SSL para Managed Database
+            error_log("[" . date('Y-m-d H:i:s T') . "] Usando SSL para Managed Database");
+            
+            // SSL Mode: VERIFY_IDENTITY es el más seguro pero puede fallar
+            // Intentamos primero con REQUIRED que es más flexible
+            $db->ssl_set(NULL, NULL, NULL, NULL, NULL);
+            $db->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+        }
+        
+        // Intentar conexión
+        error_log("[" . date('Y-m-d H:i:s T') . "] Intentando conectar a: $db_host:$db_port");
+        
+        $connected = @$db->real_connect(
+            $db_host,
+            $db_user,
+            $db_pass,
+            $db_name,
+            $db_port,
+            NULL,
+            $is_managed_db ? MYSQLI_CLIENT_SSL : 0
+        );
+        
+        if (!$connected) {
+            error_log("[" . date('Y-m-d H:i:s T') . "] MySQL Connection Error: " . $db->connect_error . " (Code: " . $db->connect_errno . ")");
+            return null;
+        }
+        
+        // Configurar charset
+        $db->set_charset("utf8mb4");
+        
+        error_log("[" . date('Y-m-d H:i:s T') . "] ✅ Conexión exitosa a la base de datos");
+        
+        return $db;
+        
+    } catch (Exception $e) {
+        error_log("[" . date('Y-m-d H:i:s T') . "] DB Connection Exception: " . $e->getMessage());
+        return null;
     }
-    
-    // Configurar charset
-    $db->set_charset("utf8mb4");
-    
-    return $db;
 }
 
 /**
- * Función helper para verificar configuración (debugging)
+ * Función para verificar conexión (para debugging)
  */
-function getDBConfigInfo() {
-    if (!ini_get('display_errors')) {
-        return "Información no disponible en producción";
-    }
+function testConnection() {
+    $start_time = microtime(true);
     
-    return [
-        'host' => DB_HOST,
-        'port' => DB_PORT,
-        'user' => DB_USER,
-        'database' => DB_NAME,
-        'environment' => getenv('APP_ENV') ?: 'development'
-    ];
+    echo "<p>🔍 Iniciando test de conexión...</p>";
+    
+    $db = getDBConnection();
+    
+    $elapsed = round(microtime(true) - $start_time, 2);
+    
+    if ($db) {
+        echo "<p>✅ <strong>Conexión exitosa</strong> (tiempo: {$elapsed}s)</p>";
+        echo "<ul>";
+        echo "<li><strong>Host:</strong> " . htmlspecialchars($db->host_info) . "</li>";
+        echo "<li><strong>Versión MySQL:</strong> " . htmlspecialchars($db->server_info) . "</li>";
+        echo "<li><strong>Charset:</strong> " . htmlspecialchars($db->character_set_name()) . "</li>";
+        echo "</ul>";
+        $db->close();
+        return true;
+    } else {
+        echo "<p>❌ <strong>Error al conectar</strong> (timeout después de {$elapsed}s)</p>";
+        return false;
+    }
 }
 ?>
