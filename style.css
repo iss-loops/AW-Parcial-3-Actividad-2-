@@ -1,0 +1,301 @@
+/* Reinicio básico para mantener consistencia entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Paleta de colores y variables reutilizables del tema oscuro */
+:root {
+    --fondo: #0d0221; /* Color base del body */
+    --fondo-gradiente: linear-gradient(135deg, #0d0221 0%, #1a0b2e 60%, #2e1a47 100%); /* Ambientación del fondo */
+    --panel: #1a0b2e; /* Panel principal */
+    --panel-alt: #2e1a47; /* Paneles secundarios */
+    --borde: #433060; /* Bordes suaves */
+    --texto: #e0e0e0; /* Texto principal */
+    --texto-suave: #a29bfe; /* Textos secundarios */
+    --acento: #7b2cbf; /* Color de botones/links */
+    --acento-hover: #5a189a; /* Estado hover principal */
+    --acento-secundario: #00f5ff; /* Acciones secundarias */
+    --ok: #34d399; /* Mensajes de éxito */
+    --error: #f87171; /* mensajes de error */
+    --info: #60a5fa; /* Mensajes informativos */
+    --tabla-header: #3f1f66; /* Fondo encabezado de tabla */
+    --tabla-hover: #351750; /* Hover de filas */
+    --sombra: rgba(3, 0, 20, 0.55); /* Sombra general */
+}
+
+/* Cuerpo general: tipografía cómoda y fondo oscuro neutro */
+body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: var(--fondo-gradiente);
+    color: var(--texto);
+    padding: 24px;
+    line-height: 1.65;
+}
+
+/* Contenedor principal donde viven los módulos CRUD */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--panel);
+    padding: 34px;
+    border-radius: 18px;
+    box-shadow: 0 25px 60px var(--sombra);
+    border: 1px solid var(--borde);
+}
+
+/* Encabezados para secciones y subsecciones */
+h1 {
+    color: var(--texto);
+    margin-bottom: 28px;
+    text-align: center;
+    border-bottom: 3px solid var(--acento);
+    padding-bottom: 12px;
+    letter-spacing: 0.8px;
+}
+
+h2 {
+    color: var(--texto);
+    margin: 24px 0 16px;
+}
+
+/* Menu principal que agrupa Libros, Clientes y Órdenes */
+.nav-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin: 22px 0;
+}
+
+/* Tarjetas de navegación para cada grupo de acciones CRUD */
+.nav-section {
+    background: var(--panel-alt);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-section:hover {
+    transform: translateY(-3px);
+    border-color: var(--acento);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+.nav-section h3 {
+    color: var(--texto);
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nav-section a {
+    display: block;
+    padding: 11px 16px;
+    margin: 6px 0;
+    background: linear-gradient(135deg, var(--acento) 0%, var(--acento-secundario) 100%);
+    color: #0d0221;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: filter 0.25s ease, transform 0.2s ease;
+}
+
+.nav-section a:hover {
+    filter: brightness(1.05);
+    transform: translateX(3px);
+}
+
+/* Fieldsets agrupados para capturar datos en formularios */
+fieldset {
+    border: 1px solid var(--borde);
+    padding: 24px;
+    margin: 26px 0;
+    border-radius: 12px;
+    background: #1f1134;
+}
+
+legend {
+    font-weight: 700;
+    color: var(--acento);
+    padding: 0 12px;
+}
+
+/* Etiquetas alineadas para lectura rápida del formulario */
+label {
+    display: inline-block;
+    width: 160px;
+    font-weight: 600;
+    color: var(--texto-suave);
+    margin-bottom: 6px;
+}
+
+/* Entradas y selectores con contraste alto y bordes suaves */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 320px;
+    padding: 11px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 15px;
+    background: #2a1542;
+    color: var(--texto);
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--acento);
+    box-shadow: 0 0 0 2px rgba(123, 44, 191, 0.3);
+}
+
+/* Botones reutilizables para enviar formularios y acciones generales */
+input[type="submit"],
+button {
+    background: var(--acento);
+    color: #fdf2ff;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 14px;
+    transition: background 0.25s ease, transform 0.15s ease;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background: var(--acento-hover);
+    transform: translateY(-1px);
+}
+
+/* Variante para eliminar registros con énfasis en color rojo */
+.btn-delete {
+    background: var(--error);
+    color: #fff5f5;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+/* Variante secundaria para acciones neutrales (volver, cancelar, etc.) */
+.btn-secondary {
+    background: var(--acento-secundario);
+    color: #eef2ff;
+}
+
+.btn-secondary:hover {
+    background: #5a189a;
+}
+
+/* Tabla general donde se listan registros y resultados de búsqueda */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 26px 0;
+    background: var(--panel-alt);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table th,
+table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--borde);
+}
+
+table th {
+    background: var(--tabla-header);
+    color: var(--texto);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+table tr:hover {
+    background: var(--tabla-hover);
+}
+
+/* Mensajes para mostrar éxito, error o información */
+.message {
+    padding: 18px;
+    margin: 26px 0;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.success {
+    background: rgba(52, 211, 153, 0.18);
+    color: #bff7e3;
+    border-color: var(--ok);
+}
+
+.error {
+    background: rgba(248, 113, 113, 0.16);
+    color: #ffd6d6;
+    border-color: var(--error);
+}
+
+.info {
+    background: rgba(96, 165, 250, 0.16);
+    color: #cfe3ff;
+    border-color: var(--info);
+}
+
+/* Enlace "Regresar" para mejorar la navegación contextual */
+a.back-link {
+    display: inline-block;
+    margin-top: 24px;
+    color: var(--acento);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+a.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Contenedor de acciones dentro de las tablas (editar / borrar) */
+.actions {
+    white-space: nowrap;
+}
+
+.actions a {
+    padding: 7px 14px;
+    margin: 0 6px;
+    text-decoration: none;
+    border-radius: 8px;
+    color: #0d0221;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.actions .edit {
+    background: var(--acento);
+}
+
+.actions .delete {
+    background: var(--error);
+    color: #ffe6e6;
+}
+
+.actions a:hover {
+    opacity: 0.85;
+}
+
+/* Agrupaciones verticales dentro de formularios para separar campos */
+.form-group {
+    margin: 18px 0;
+}
